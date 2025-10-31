@@ -1,5 +1,13 @@
 from pydantic import BaseModel, Field
 
+class AyahTextResponse(BaseModel):
+    surah_number: int
+    surah_name_ar: str
+    surah_name_en: str
+    ayah_number: int
+    ayah_text_ar: str
+    ayah_text_en: str
+
 class AyahAudioRequest(BaseModel):
     surah: int = Field(..., ge=1, le=114, description="Surah number (1–114)")
     ayah: int = Field(..., ge=1, description="Ayah number")

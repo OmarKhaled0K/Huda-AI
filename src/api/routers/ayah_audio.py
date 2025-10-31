@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException,Query
 from utils.logging.logger_setup import setup_logger
-from schemas.ayah_audio_schema import  AyahAudioResponse
-from core.services.quran_audio_service import QuranService
+from schemas.holy_quraan_schema import  AyahAudioResponse
+from core.services.quran_service import QuranService
 from fastapi.responses import StreamingResponse
 import requests
 
@@ -25,7 +25,7 @@ async def get_ayah_audio(
     Returns:
         AyahAudioResponse: Audio metadata including URLs and reciter information
     """
-    logger.info(f"Received request for Surah {surah}, Ayah {ayah}, Reciter {reciter_id}")
+    logger.info(f"Received audio request for Surah {surah}, Ayah {ayah}, Reciter {reciter_id}")
     result = QuranService.fetch_ayah_audio(surah, ayah, reciter_id)
     response = AyahAudioResponse(
             surah=result['surah'],
@@ -52,6 +52,7 @@ def stream_ayah_audio(
         audio_resp = requests.get(meta['audio_url'], stream=True, timeout=15)
         audio_resp.raise_for_status()
     except requests.RequestException as e:
+        logger.error(f"Failed to fetch audio file: {e}")
         raise HTTPException(status_code=502, detail=f"Failed to fetch audio file: {e}")
 
     # Stream audio to user
