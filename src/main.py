@@ -1,8 +1,12 @@
 from fastapi import FastAPI
 from api.routers import basic_chat
 from utils.logging.logger_setup import setup_logger
-app = FastAPI(title="Huda AI",
-              version="1.0.0",
+from config.settings import get_settings
+
+settings = get_settings()
+
+app = FastAPI(title=settings.APP_NAME,
+              version=settings.APP_VERSION,
               description="An AI-powered application for various tasks.")
 
 
@@ -15,7 +19,11 @@ app.include_router(basic_chat.router,
 # Healthy check endpoint
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    return {
+        "status": "healthy",
+        "env": settings.APP_ENV,
+        "debug": settings.DEBUG
+    }
 
 if __name__ == "__main__":
     import uvicorn
