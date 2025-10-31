@@ -4,8 +4,7 @@ import logging
 import time
 from typing import Dict, Any, Tuple
 import openai
-from dotenv import load_dotenv
-
+from config.settings import get_settings
 logger = logging.getLogger("app.llm")  # Component-level logger
 
 
@@ -15,10 +14,10 @@ class OpenAILLM(BaseLLM):
     The default model is gpt-4.1-mini, but can be overridden via environment variable.
     """
 
-    def __init__(self, model: str = "gpt-4.1-mini"):
-        self.model = model
-        load_dotenv()
-        self.client = openai.OpenAI()  # single client for reuse
+    def __init__(self, model: str):
+        settings = get_settings()
+        self.model = model or settings.OPENAI_MODEL
+        self.client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)  # single client for reuse
 
     async def generate(self, prompt: str, **kwargs) -> Tuple[str, Dict[str, Any]]:
         start_time = time.time()
