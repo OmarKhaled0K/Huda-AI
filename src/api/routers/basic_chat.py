@@ -3,10 +3,10 @@ from schemas import ChatRequest, ChatResponse
 from ai.llms.llm_manager import get_llm
 import logging
 
-router = APIRouter(prefix="/chat", tags=["Basic Chat"])
+basic_chat_router = APIRouter(prefix="/chat", tags=["Basic Chat"])
 logger = logging.getLogger(__name__)
 
-@router.post("/", response_model=ChatResponse)
+@basic_chat_router.post("/", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):
     """
     Basic chat endpoint that sends a prompt to the LLM and returns the response.
