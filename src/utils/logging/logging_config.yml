@@ -1,0 +1,71 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  json:
+    (): utils.logging.mylogger.MyJSONFormatter
+    fmt_keys:
+      timestamp: asctime
+      level: levelname
+      logger: name
+      module: module
+      function: funcName
+      line: lineno
+      thread_name: threadName
+      message: message
+  simple:
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+filters:
+  non_error:
+    (): utils.logging.mylogger.NonErrorFilter
+  error:
+    (): utils.logging.mylogger.ErrorFilter
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: simple
+    stream: ext://sys.stdout
+
+  file_info:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: json
+    filename: logs/app_info.jsonl
+    maxBytes: 10485760
+    backupCount: 5
+    encoding: utf8
+    filters: [non_error]
+
+  file_error:
+    class: logging.handlers.RotatingFileHandler
+    level: WARNING
+    formatter: json
+    filename: logs/app_errors.jsonl
+    maxBytes: 10485760
+    backupCount: 5
+    encoding: utf8
+    filters: [error]
+
+  #TODO: Enable queue handler if needed in the future
+  # queue:
+  #   class: logging.handlers.QueueHandler
+  #   queue: ext://queue.Queue(-1)
+
+loggers:
+  "":
+    level: DEBUG
+    handlers: [console, file_info, file_error]
+    propagate: false
+
+  uvicorn.error:
+    level: WARNING
+
+  uvicorn.access:
+    level: WARNING
+
+  fastapi:
+    level: INFO
