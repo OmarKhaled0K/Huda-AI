@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     PORT: int = 8000
     
 
+    # BASE URLS
+    BASE_QURAN_AUDIO_URL: str = "https://quranapi.pages.dev/api/audio"
+    BASE_QURAN_TEXT_URL: str = "https://api.alquran.cloud/v1"
+
     #  OpenAI / LLM
     LLM_PROVIDER: str = "openai"  # could be: openai | llama | deepseek 
     OPENAI_API_KEY: str

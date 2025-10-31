@@ -1,11 +1,11 @@
 import requests
 from fastapi import HTTPException
-from schemas.holy_quraan_schema import AyahAudioResponse
 from utils.logging.logger_setup import setup_logger
-
+from config.settings import get_settings
 logger = setup_logger()
 
 class QuranService:
+    
     @staticmethod
     def fetch_ayah_audio(surah: int, ayah: int, reciter_id: int) -> dict:
         """
@@ -22,7 +22,8 @@ class QuranService:
         Raises:
             HTTPException: If API request fails or reciter is not found
         """
-        base_url = f"https://quranapi.pages.dev/api/audio/{surah}/{ayah}.json"
+        settings = get_settings()
+        base_url = f"{settings.BASE_QURAN_AUDIO_URL}/{surah}/{ayah}.json"
         try:
             logger.info(f"Fetching audio for Surah {surah}, Ayah {ayah}, Reciter {reciter_id}")
             resp = requests.get(base_url, timeout=10)
@@ -53,11 +54,11 @@ class QuranService:
         """
         Fetches a single Ayah with both Arabic and English text and Surah info.
         """
-        BASE_URL = "https://api.alquran.cloud/v1"
+        settings = get_settings()
         reference = f"{surah_number}:{ayah_number}"
 
         # Arabic edition
-        arabic_resp = requests.get(f"{BASE_URL}/ayah/{reference}/{arabic_edition}")
+        arabic_resp = requests.get(f"{settings.BASE_QURAN_TEXT_URL}/ayah/{reference}/{arabic_edition}")
         if arabic_resp.status_code != 200:
             raise HTTPException(status_code=arabic_resp.status_code, detail="Failed to fetch Arabic text.")
         arabic_data = arabic_resp.json()
@@ -65,7 +66,7 @@ class QuranService:
             raise HTTPException(status_code=500, detail=f"Arabic API error: {arabic_data}")
 
         # English edition
-        english_resp = requests.get(f"{BASE_URL}/ayah/{reference}/{english_edition}")
+        english_resp = requests.get(f"{settings.BASE_QURAN_TEXT_URL}/ayah/{reference}/{english_edition}")
         if english_resp.status_code != 200:
             logger.error(f"Failed to fetch English text: Status code {english_resp.status_code}")
             raise HTTPException(status_code=english_resp.status_code, detail="Failed to fetch English text.")

@@ -12,7 +12,7 @@ logger = setup_logger()
 async def get_ayah_audio(
     surah: int = Query(..., ge=1, le=114, description="Surah number (1–114)"),
     ayah: int = Query(..., ge=1, description="Ayah number"),
-    reciter_id: int = Query(1, ge=1, le=10, description="Reciter ID (1–5 usually)")   
+    reciter_id: int = Query(1, ge=1, le=5, description="Reciter ID (1–5 usually)")   
     ):
     """
     Return the audio URL of a specific Ayah given Surah, Ayah, and Reciter ID.
