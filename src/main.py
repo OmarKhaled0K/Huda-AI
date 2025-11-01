@@ -1,5 +1,9 @@
 from fastapi import FastAPI
-from api.routers import basic_chat
+from api.routers import (
+    basic_chat_router,
+    ayah_audio_router,
+    ayah_text_router,
+    )   
 from utils.logging.logger_setup import setup_logger
 from config.settings import get_settings
 
@@ -14,7 +18,13 @@ app = FastAPI(title=settings.APP_NAME,
 logger = setup_logger()
 logger.info("🚀 Huda AI logger initialized successfully.")
 
-app.include_router(basic_chat.router,
+app.include_router(ayah_text_router,
+                   prefix="/api/v1")
+
+app.include_router(ayah_audio_router,
+                   prefix="/api/v1")
+
+app.include_router(basic_chat_router,
                    prefix="/api/v1")
 # Healthy check endpoint
 @app.get("/health")
