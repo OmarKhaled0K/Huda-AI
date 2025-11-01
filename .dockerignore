@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual env
+venv/
+env/
+.venv/
+
+# Git
+.git/
+
+# Logs and caches (we mount these in compose)
+src/utils/logging/logs/
+src/core/services/audio_cache/
+
+# Editor configs
+.vscode/
+.idea/
+
+# Other
+dist/
+build/
+*.egg-info/
