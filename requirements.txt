@@ -1,3 +1,8 @@
 litellm==1.79.0
 pydantic==2.12.3
 PyYAML==6.0.3
+fastapi==0.120.4
+uvicorn[standard]==0.38.0
+openai==2.6.1
+qdrant-client==1.15.1
+pydantic-settings==2.11.0
