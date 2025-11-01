@@ -16,7 +16,7 @@ services:
       - PYTHONUNBUFFERED=1
       - QDRANT_URL=http://qdrant:6333  # internal connection to Qdrant
       # Optionally add:
-      # - QDRANT_API_KEY=your-api-key
+      - QDRANT_API_KEY=RW3nKzxeY1mPlokNZaWB9PCr5KpooA9AN4Z0YyCb64o487Saf72kHuzBY1F6DeGK
     depends_on:
       - qdrant
     restart: unless-stopped
@@ -37,7 +37,7 @@ services:
       - qdrant_storage:/qdrant/storage
     environment:
       QDRANT__STORAGE__STORAGE_PATH: /qdrant/storage
-      QDRANT__SERVICE__API_KEY: ""  # Optional: set your API key for security
+      QDRANT__SERVICE__API_KEY: "RW3nKzxeY1mPlokNZaWB9PCr5KpooA9AN4Z0YyCb64o487Saf72kHuzBY1F6DeGK"  # Optional: set your API key for security
       QDRANT__CLUSTER__ENABLED: "false"  # change to "true" for multi-node setup
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:6333/ || exit 1"]

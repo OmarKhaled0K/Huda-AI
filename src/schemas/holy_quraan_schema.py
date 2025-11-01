@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-
+from typing import List, Optional
 class AyahTextResponse(BaseModel):
     surah_number: int
     surah_name_ar: str
@@ -21,3 +21,54 @@ class AyahAudioResponse(BaseModel):
     reciter_name: str
     audio_url: str | None = None
     original_url: str | None = None
+class AyahCreate(BaseModel):
+    surah_number: int
+    ayah_number: int
+    juz_number: Optional[int]
+    text: str
+    transliteration: Optional[str]
+    translation: Optional[str]
+    ayah_type: Optional[str] = Field(description="Makki or Madani")
+    feelings: Optional[List[str]] = []
+
+class TafsirCreate(BaseModel):
+    referenced_ayahs: List[dict]  # [{"surah_number":1, "ayah_number":1}, ...]
+    text: str
+    tafseer_type: str
+    translation: Optional[str]
+    feelings: Optional[List[str]] = []
+
+class HadithCreate(BaseModel):
+    hadith_number: Optional[str]
+    source_collection: Optional[str]
+    text: str
+    transliteration: Optional[str]
+    translation: Optional[str]
+    explanation: Optional[str]
+    feelings: Optional[List[str]] = []
+
+class DuaaCreate(BaseModel):
+    feeling: str
+    url: str
+    dua_number: str
+    arabic: str
+    transliteration: Optional[str]
+    translation: Optional[str]
+    source: Optional[str]
+    duas_count: Optional[int] = None
+#TODO: Remove duplication with DuaaCreate
+class DuaaItem(BaseModel):
+    number: str
+    arabic: str
+    transliteration: str
+    translation: str
+    source: Optional[str]
+
+class DuaaBatch(BaseModel):
+    feeling: str
+    url: str
+    duas_count: int
+    duas: List[DuaaCreate]
+
+
+    

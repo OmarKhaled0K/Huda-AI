@@ -2,7 +2,7 @@ import requests
 from fastapi import HTTPException
 from utils.logging.logger_setup import setup_logger
 from config.settings import get_settings
-logger = setup_logger()
+logger = setup_logger("app.quran_service")
 
 class QuranService:
     
