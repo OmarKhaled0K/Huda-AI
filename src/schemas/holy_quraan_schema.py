@@ -56,6 +56,7 @@ class DuaaCreate(BaseModel):
     translation: Optional[str]
     source: Optional[str]
     duas_count: Optional[int] = None
+
 #TODO: Remove duplication with DuaaCreate
 class DuaaItem(BaseModel):
     number: str
@@ -68,7 +69,4 @@ class DuaaBatch(BaseModel):
     feeling: str
     url: str
     duas_count: int
-    duas: List[DuaaCreate]
-
-
-    
+    duas: List[DuaaItem] | DuaaItem
