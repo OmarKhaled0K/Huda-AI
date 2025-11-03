@@ -6,7 +6,7 @@ from config.settings import get_settings
 class OpenAIEmbedding(BaseEmbedding):
     """OpenAI embedding implementation."""
     
-    def __init__(self, api_key: str, model: str = "text-embedding-ada-002"):
+    def __init__(self,model: str = "text-embedding-ada-002"):
         """
         Initialize OpenAI embedding.
         
