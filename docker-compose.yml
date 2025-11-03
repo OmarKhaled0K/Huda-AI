@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: hudaai-web
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount project for quick development changes (optional for prod)
+      - ./:/app:delegated
+      # Persist logs and cached audio outside container
+      - ./src/utils/logging/logs:/app/src/utils/logging/logs:delegated
+      - ./src/core/services/audio_cache:/app/src/core/services/audio_cache:delegated
+    environment:
+      - PYTHONUNBUFFERED=1
+      - QDRANT_URL=http://qdrant:6333  # internal connection to Qdrant
+      # Optionally add:
+      - QDRANT_API_KEY=RW3nKzxeY1mPlokNZaWB9PCr5KpooA9AN4Z0YyCb64o487Saf72kHuzBY1F6DeGK
+    depends_on:
+      - qdrant
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"   # REST API and dashboard
+      - "6334:6334"   # gRPC API
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    environment:
+      QDRANT__STORAGE__STORAGE_PATH: /qdrant/storage
+      QDRANT__SERVICE__API_KEY: "RW3nKzxeY1mPlokNZaWB9PCr5KpooA9AN4Z0YyCb64o487Saf72kHuzBY1F6DeGK"  # Optional: set your API key for security
+      QDRANT__CLUSTER__ENABLED: "false"  # change to "true" for multi-node setup
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:6333/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  qdrant_storage:

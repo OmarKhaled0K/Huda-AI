@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     # BASE URLS
     BASE_QURAN_AUDIO_URL: str = "https://quranapi.pages.dev/api/audio"
     BASE_QURAN_TEXT_URL: str = "https://api.alquran.cloud/v1"
+    BASE_QDRANT_URL: str = "http://qdrant:6333"
 
     #  OpenAI / LLM
     LLM_PROVIDER: str = "openai"  # could be: openai | llama | deepseek 
@@ -35,6 +36,12 @@ class Settings(BaseSettings):
     #  Vector DB 
     VECTOR_DB_URL: Optional[str] = None
     VECTOR_DB_API_KEY: Optional[str] = None
+    QDRANT_API_KEY: Optional[str] = "RW3nKzxeY1mPlokNZaWB9PCr5KpooA9AN4Z0YyCb64o487Saf72kHuzBY1F6DeGK"
+
+    # Embedding
+    DEFAULT_VECTOR_SIZE: int = 1536
+    EMBEDDING_MODEL: str = "text-embedding-3-small"
+    DEFAULT_DISTANCE: str = "Cosine"  # could be: Cosine | Euclidean | Dot
 
     #  Paths 
     LOG_DIR: str = "logs"

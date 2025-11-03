@@ -1,11 +1,12 @@
 # Import base LLM class from the correct path
 from .base import BaseLLM
 import logging
+from utils.logging import setup_logger
 import time
 from typing import Dict, Any, Tuple
 import openai
 from config.settings import get_settings
-logger = logging.getLogger("app.llm")  # Component-level logger
+logger = setup_logger("app.llm")  # Component-level logger
 
 
 class OpenAILLM(BaseLLM):

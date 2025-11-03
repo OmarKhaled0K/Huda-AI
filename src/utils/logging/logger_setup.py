@@ -2,7 +2,7 @@ import logging.config
 import json
 from pathlib import Path
 import yaml
-def setup_logger():
+def setup_logger(logger_name: str=__name__) -> logging.Logger:
     # Get the current directory where logger_setup.py is located
     current_dir = Path(__file__).resolve().parent
     config_path = current_dir / "logging_config.yml"
@@ -28,4 +28,4 @@ def setup_logger():
     
     # Configure logging
     logging.config.dictConfig(config)
-    return logging.getLogger("app")
+    return logging.getLogger(logger_name)
