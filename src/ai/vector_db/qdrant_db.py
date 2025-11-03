@@ -453,8 +453,10 @@ class QdrantVectorStore(BaseVectorStore):
         await self._ensure_client()
         q_filter = self._build_filter(metadata_filters)
         # Use scroll to retrieve items that match filter; with small datasets this is fine.
-        resp = await self._client.scroll(collection_name=collection, limit=limit, with_payload=True, scroll_filter=q_filter)
-        return [{"id": r.id, "payload": r.payload} for r in resp.records]
+        resp,_ = await self._client.scroll(collection_name=collection, limit=limit, with_payload=True, scroll_filter=q_filter)
+        print(f"resp: {resp}")
+
+        return [{"id": r.id, "payload": r.payload} for r in resp]
 
     # -------------------------
     # Delete / Utility
@@ -501,6 +503,46 @@ class QdrantVectorStore(BaseVectorStore):
             return None
         r = resp[0]
         return {"id": r.id, "payload": r.payload}
+    
+    async def count_collection_points(
+        self,
+        collection_name: str,
+        filters: Optional[Dict[str, Any]] = None,
+        exact: bool = True,
+    ) -> int:
+        """
+        Return the number of points in `collection_name`.
+
+        Args:
+            collection_name: name of the Qdrant collection.
+            filters: optional simple dict of metadata filters (same format as used elsewhere in this class).
+            exact: whether to request an exact count from Qdrant (may be slower).
+
+        Returns:
+            Integer count (0 on errors or if the collection does not exist).
+        """
+        await self._ensure_client()
+        # If collection does not exist, return 0
+        try:
+            if await self.collection_exists(collection_name) is False:
+                return 0
+
+            q_filter = self._build_filter(filters) if filters else None
+
+            # Qdrant Async client `count` typically returns an object with `count` attribute.
+            # Use `filter` argument name which matches qdrant-client expectations in most versions.
+            resp = await self._client.count(collection_name=collection_name, filter=q_filter, exact=exact)
+
+            # resp may be an object with `.count` or an int; handle both.
+            if hasattr(resp, "count"):
+                return int(getattr(resp, "count", 0) or 0)
+            if isinstance(resp, int):
+                return resp
+            # Fallback: try to coerce
+            return int(resp) if resp is not None else 0
+        except Exception as e:
+            logger.exception("Failed to count points in collection '%s': %s", collection_name, e)
+            return 0
     #TODO: Add those two methods in base class as abstract methods
     async def collection_exists(self, collection_name: str) -> bool:
         await self._ensure_client()
