@@ -38,10 +38,17 @@ class Settings(BaseSettings):
     VECTOR_DB_API_KEY: Optional[str] = None
     QDRANT_API_KEY: Optional[str] = "RW3nKzxeY1mPlokNZaWB9PCr5KpooA9AN4Z0YyCb64o487Saf72kHuzBY1F6DeGK"
 
+    # Collection names
+    DUAA_COLLECTION_NAME: str = "duaas"
+    DUAA_PATH : str = "data/iam_feeling.json"
+
     # Embedding
     DEFAULT_VECTOR_SIZE: int = 1536
     EMBEDDING_MODEL: str = "text-embedding-3-small"
     DEFAULT_DISTANCE: str = "Cosine"  # could be: Cosine | Euclidean | Dot
+    
+    EMBEDDING_PROVIDER: str = "openai"  # The embedding provider to use
+    OPENAI_EMBEDDING_MODEL: str = "text-embedding-ada-002"  # The model to use for embeddings
 
     #  Paths 
     LOG_DIR: str = "logs"
