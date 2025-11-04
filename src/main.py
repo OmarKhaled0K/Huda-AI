@@ -5,6 +5,7 @@ from api.routers import (
     ayah_text_router,
     vector_database_router,
     batch_database_router,
+    duaa_router
     )   
 from utils.logging.logger_setup import setup_logger
 from config.settings import get_settings
@@ -25,7 +26,7 @@ async def lifespan(app: FastAPI):
 logger = setup_logger()
 logger.info("🚀 Huda AI logger initialized successfully.")
 
-app.router.include_router(batch_database_router,
+app.router.include_router(duaa_router,
                           prefix="/api/v1")
 
 app.include_router(vector_database_router,
