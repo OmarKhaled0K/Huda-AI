@@ -40,7 +40,7 @@ class Settings(BaseSettings):
 
     # Collection names
     DUAA_COLLECTION_NAME: str = "duaas"
-    DUAA_PATH : str = "data/iam_feeling.json"
+    DUAA_PATH : str = "/app/data/duaa/iam_feeling_data.json"
 
     # Embedding
     DEFAULT_VECTOR_SIZE: int = 1536

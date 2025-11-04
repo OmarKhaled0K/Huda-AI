@@ -135,13 +135,14 @@ class QdrantVectorStore(BaseVectorStore):
         embedding: List[float],
         chunk_index: Optional[int] = 0,
         extra_metadata: Optional[Dict[str, Any]] = None,
+        id: Optional[str | int] =None,
     ) -> Dict[str, Any]:
         await self._ensure_client()
         collection = "ayahs"
-        _id = ayah_id or self._new_id()
+        _id = id or self._new_id()
         payload = {
             "type": "ayah",
-            "ayah_id": _id,
+            "ayah_id": ayah_id,
             "surah_number": surah_number,
             "ayah_number": ayah_number,
             "juz_number": juz_number,
@@ -170,24 +171,23 @@ class QdrantVectorStore(BaseVectorStore):
         duaa_id: Optional[str],
         feeling: str,
         url: str,
-        dua_number: str,
         arabic: str,
         transliteration: Optional[str],
         translation: Optional[str],
         source: Optional[str],
         embedding: List[float],
         duas_count: Optional[int] = None,
-        extra_metadata: Optional[Dict[str, Any]] = None
+        extra_metadata: Optional[Dict[str, Any]] = None,
+        id: Optional[str | int] =None,
     ) -> Dict[str, Any]:
         await self._ensure_client()
         collection = "duaas"
-        _id = duaa_id or self._new_id()
+        _id = id or self._new_id()
         payload = {
             "type": "duaa",
-            "duaa_id": _id,
+            "duaa_id": duaa_id,
             "feeling": feeling,
             "url": url,
-            "dua_number": dua_number,
             "transliteration": transliteration,
             "translation": translation,
             "source": source,
@@ -221,13 +221,14 @@ class QdrantVectorStore(BaseVectorStore):
         embedding: List[float],
         chunk_index: Optional[int] = 0,
         extra_metadata: Optional[Dict[str, Any]] = None,
+        id: Optional[str | int] =None,
     ) -> Dict[str, Any]:
         await self._ensure_client()
         collection = "tafseers"
-        _id = tafseer_id or self._new_id()
+        _id = id or self._new_id()
         payload = {
             "type": "tafseer",
-            "tafseer_id": _id,
+            "tafseer_id": tafseer_id,
             "referenced_ayahs": referenced_ayahs,
             "tafseer_type": tafseer_type,
             "translation": translation,
@@ -260,13 +261,14 @@ class QdrantVectorStore(BaseVectorStore):
         embedding: List[float],
         chunk_index: Optional[int] = 0,
         extra_metadata: Optional[Dict[str, Any]] = None,
+        id: Optional[str | int] =None,
     ) -> Dict[str, Any]:
         await self._ensure_client()
         collection = "hadiths"
-        _id = hadith_id or self._new_id()
+        _id = id or self._new_id()
         payload = {
             "type": "hadith",
-            "hadith_id": _id,
+            "hadith_id": hadith_id,
             "hadith_number": hadith_number,
             "source_collection": source_collection,
             "transliteration": transliteration,
@@ -549,9 +551,10 @@ class QdrantVectorStore(BaseVectorStore):
         collections = await self._client.get_collections()
         return any(c.name == collection_name for c in collections.collections)
 
-    async def create_collection(self, collection_name: str, vectors: models.VectorParams) -> None:
+    async def create_collection(self, collection_name: str) -> None:
         await self._ensure_client()
-        await self._client.create_collection(
-            collection_name=collection_name,
-            vectors_config=vectors,
-        )
+        if await self.collection_exists(collection_name) is False:
+            await self._client.create_collection(
+                collection_name=collection_name,
+                vectors_config=models.VectorParams(size=self._vector_size, distance=self._distance),
+            )

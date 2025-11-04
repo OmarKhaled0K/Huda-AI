@@ -59,7 +59,7 @@ class DuaaCreate(BaseModel):
 
 #TODO: Remove duplication with DuaaCreate
 class DuaaItem(BaseModel):
-    number: str
+    id: str
     arabic: str
     transliteration: str
     translation: str
