@@ -211,7 +211,7 @@ class DuaaService:
             f"Each duaa has an ID. When you want to reference or embed a duaa, "
             f"DO NOT write or paraphrase it — just include its ID inside <duaa></duaa> tags.\n\n"
             f"For example:\n"
-            f"💬 'May Allah ease your worries and bless you with peace. You might reflect on <duaa>duaa123</duaa>.'\n\n"
+            f"💬 'May Allah ease your worries and bless you with peace. Repeat after me or say the duaa: <duaa>duaa123</duaa>.'\n\n"
             f"---\n"
         )
         results = await self.vector_db.search_by_metadata(collection="duaas",
@@ -238,7 +238,6 @@ class DuaaService:
         )
 
         logger.info(f"Generating friendly Islamic message for feeling '{feeling}' with {len(context)} context items.")
-        print(f"Prompt for LLM:\n{prompt}")
 
         try:
             response, metadata = await self.llm.generate(prompt)
