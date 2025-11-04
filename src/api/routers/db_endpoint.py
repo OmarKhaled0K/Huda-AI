@@ -3,7 +3,6 @@ from schemas.holy_quraan_schema import (
     AyahCreate,
     TafsirCreate,
     HadithCreate,
-    DuaaCreate,
 )
 from ai.vector_db.qdrant_db import QdrantVectorStore
 from utils.logging import setup_logger
@@ -61,22 +60,5 @@ async def add_hadith(hadith: HadithCreate):
         explanation=hadith.explanation,
         feelings=hadith.feelings,
         embedding=embedding
-    )
-    return {"status": "ok", "id": res["id"]}
-
-@vector_database_router.post("/duaas", summary="Add a Duaa")
-async def add_duaa(duaa: DuaaCreate):
-    embedding = embed_text(duaa.arabic)
-    res = await vector_store.insert_duaa(
-        duaa_id=None,
-        feeling=duaa.feeling,
-        url=duaa.url,
-        dua_number=duaa.dua_number,
-        arabic=duaa.arabic,
-        transliteration=duaa.transliteration,
-        translation=duaa.translation,
-        source=duaa.source,
-        embedding=embedding,
-        duas_count=duaa.duas_count
     )
     return {"status": "ok", "id": res["id"]}
