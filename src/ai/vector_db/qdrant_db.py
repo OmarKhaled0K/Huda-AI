@@ -465,7 +465,7 @@ class QdrantVectorStore(BaseVectorStore):
     # -------------------------
     async def delete_by_id(self, collection: str, doc_id: str) -> bool:
         await self._ensure_client()
-        await self._client.delete(collection_name=collection, points=[doc_id])
+        await self._client.delete(collection_name=collection, points_selector=[doc_id])
         return True
 
     async def delete_by_ayah_reference(self, surah_number: int, ayah_number: int, collection: Optional[str] = None) -> int:
