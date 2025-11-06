@@ -7,3 +7,5 @@ openai==2.6.1
 qdrant-client==1.15.1
 pydantic-settings==2.11.0
 python-multipart==0.0.20
+sqlalchemy==2.0.44
+sqlalchemy-utils=0.42.0
